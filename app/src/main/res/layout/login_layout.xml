@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+    <include
+        layout="@layout/toolbar_layout"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <GridLayout
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        >
+        <TextView
+            android:layout_gravity="center"
+            android:text="Account:"
+            />
+        <EditText
+            android:id="@+id/account"
+            android:layout_width="match_parent"
+            android:layout_columnSpan="3"
+            />
+        <TextView
+            android:layout_gravity="center"
+            android:text="Password:"
+            />
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_columnSpan="3"
+            android:inputType="textPassword"
+            />
+        <CheckBox
+            android:id="@+id/saveaccount"
+            android:text="save account"
+            android:gravity="center"
+            android:layout_columnSpan="2"
+            />
+        <CheckBox
+            android:id="@+id/autologin"
+            android:gravity="center"
+            android:text="auto login"
+            android:layout_columnSpan="2"
+            />
+        <Button
+            android:id="@+id/login"
+            android:layout_columnSpan="2"
+            android:gravity="center"
+            android:text="Log In"
+            />
+        <Button
+            android:id="@+id/register"
+            android:layout_columnSpan="2"
+            android:gravity="center"
+            android:text="Register"
+            />
+    </GridLayout>
+</RelativeLayout>

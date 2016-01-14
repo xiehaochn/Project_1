@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <GridLayout
+        android:orientation="horizontal"
+        android:columnCount="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            style="@style/FriendProfileText"
+            android:text="Count:"
+            />
+        <TextView
+            style="@style/FriendProfileText"
+            android:id="@+id/count"
+            android:text="1"
+            />
+        <TextView
+            style="@style/FriendProfileText"
+            android:text="Time:"
+            />
+        <TextView
+            style="@style/FriendProfileText"
+            android:id="@+id/time"
+            android:text="1"
+            />
+    </GridLayout>
+</android.support.v7.widget.CardView>
