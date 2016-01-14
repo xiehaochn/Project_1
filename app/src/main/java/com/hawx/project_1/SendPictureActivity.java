@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -81,7 +82,9 @@ public class SendPictureActivity extends BaseActivity {
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         WindowManager window= (WindowManager) getSystemService(WINDOW_SERVICE);
         Display display=window.getDefaultDisplay();
-        width=display.getWidth();
+        Point point=new Point();
+        display.getSize(point);
+        width=point.x;
     }
 
     @Override
