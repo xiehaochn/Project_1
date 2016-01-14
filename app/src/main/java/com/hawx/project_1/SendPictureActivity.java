@@ -1,6 +1,9 @@
 package com.hawx.project_1;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -11,7 +14,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,9 +27,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Target;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +44,7 @@ import Utils.PictureRVAdapter;
  * Created by Administrator on 2016/1/14.
  */
 public class SendPictureActivity extends BaseActivity {
+    private final int REQUEST_STORAGE_PERMISSION=1;
     public  final String SER_KEY = "friendprofilelist";
     private Toolbar toolbar;
     private String userID;
@@ -48,10 +57,12 @@ public class SendPictureActivity extends BaseActivity {
     private RecyclerView recyclerview;
     private PictureRVAdapter adapter;
     private int width;
+    private Context context;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sendpic_layout);
+        context=this;
         BaseActivity.addActivity(this);
         userID=getIntent().getStringExtra(SER_KEY);
         toolbar= (Toolbar) findViewById(R.id.my_toolbar);
@@ -63,16 +74,20 @@ public class SendPictureActivity extends BaseActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File vFile = new File(imgPath);
-                if(!vFile.exists())
-                {
-                    File vDirPath = vFile.getParentFile(); //new File(vFile.getParent());
-                    vDirPath.mkdirs();
+                int checkSelfPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if(checkSelfPermission != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(SendPictureActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_STORAGE_PERMISSION);
+                }else {
+                    File vFile = new File(imgPath);
+                    if (!vFile.exists()) {
+                        File vDirPath = vFile.getParentFile(); //new File(vFile.getParent());
+                        vDirPath.mkdirs();
+                    }
+                    Uri uri = Uri.fromFile(vFile);
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);//
+                    startActivityForResult(intent, SystemCapture);
                 }
-                Uri uri = Uri.fromFile(vFile);
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT,uri);//
-                startActivityForResult(intent,SystemCapture);
             }
         });
         imgPath = Environment.getExternalStorageDirectory().toString()+"/" + "img.jpg";;//获取跟目录
@@ -128,5 +143,27 @@ public class SendPictureActivity extends BaseActivity {
             adapter.setList(list);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case REQUEST_STORAGE_PERMISSION:
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    File vFile = new File(imgPath);
+                    if (!vFile.exists()) {
+                        File vDirPath = vFile.getParentFile(); //new File(vFile.getParent());
+                        vDirPath.mkdirs();
+                    }
+                    Uri uri = Uri.fromFile(vFile);
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);//
+                    startActivityForResult(intent, SystemCapture);
+                }else{
+                    Toast.makeText(SendPictureActivity.this,"获取权限失败",Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
